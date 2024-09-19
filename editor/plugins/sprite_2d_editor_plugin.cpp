@@ -598,7 +598,8 @@ Sprite2DEditor::Sprite2DEditor() {
 	debug_uv = memnew(Panel);
 	debug_uv->connect(SceneStringName(gui_input), callable_mp(this, &Sprite2DEditor::_debug_uv_input));
 	debug_uv->connect(SceneStringName(draw), callable_mp(this, &Sprite2DEditor::_debug_uv_draw));
-	debug_uv->set_custom_minimum_size(Size2(800, 500) * EDSCALE);
+	debug_uv->set_size(Size2(800, 400) * EDSCALE);
+	debug_uv->set_custom_minimum_size(Size2(800, 200) * EDSCALE);
 	debug_uv->set_clip_contents(true);
 	vb->add_margin_child(TTR("Preview:"), debug_uv, true);
 
