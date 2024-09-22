@@ -2065,6 +2065,8 @@ void Object::reset_internal_extension(ObjectGDExtension *p_extension) {
 	ERR_FAIL_COND(_extension != nullptr);
 
 	if (p_extension) {
+		print_line("reset");
+		editor_section_folding.reset();
 		_extension_instance = p_extension->recreate_instance ? p_extension->recreate_instance(p_extension->class_userdata, (GDExtensionObjectPtr)this) : nullptr;
 		ERR_FAIL_NULL_MSG(_extension_instance, "Unable to recreate GDExtension instance - does this extension support hot reloading?");
 		_extension = p_extension;

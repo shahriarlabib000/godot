@@ -41,7 +41,7 @@ Size2 SpinBox::get_minimum_size() const {
 }
 
 void SpinBox::_update_text(bool p_keep_line_edit) {
-	String value = String::num(get_value(), Math::range_step_decimals(get_step()));
+	String value = String::num(get_value() , Math::range_step_decimals(get_custom_arrow_step() != 0.0 ? get_custom_arrow_step() : get_step()));
 	if (is_localizing_numeral_system()) {
 		value = TS->format_number(value);
 	}
@@ -497,6 +497,7 @@ void SpinBox::apply() {
 
 void SpinBox::set_custom_arrow_step(double p_custom_arrow_step) {
 	custom_arrow_step = p_custom_arrow_step;
+	set_step(p_custom_arrow_step != 0 ? p_custom_arrow_step : get_step());
 }
 
 double SpinBox::get_custom_arrow_step() const {
