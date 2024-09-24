@@ -2957,15 +2957,20 @@ void EditorPropertyResource::_set_read_only(bool p_read_only) {
 }
 
 void EditorPropertyResource::_resource_selected(const Ref<Resource> &p_resource, bool p_inspect) {
+	print_line("Editor property ");
 	if (p_resource->is_built_in() && !p_resource->get_path().is_empty()) {
+		print_line("a");
 		String parent = p_resource->get_path().get_slice("::", 0);
 		List<String> extensions;
 		ResourceLoader::get_recognized_extensions_for_type("PackedScene", &extensions);
 
 		if (p_inspect) {
+		print_line("b");
 			if (extensions.find(parent.get_extension()) && (!EditorNode::get_singleton()->get_edited_scene() || EditorNode::get_singleton()->get_edited_scene()->get_scene_file_path() != parent)) {
+				print_line("c");
 				// If the resource belongs to another (non-imported) scene, edit it in that scene instead.
 				if (!FileAccess::exists(parent + ".import")) {
+					print_line("d");
 					callable_mp(EditorNode::get_singleton(), &EditorNode::edit_foreign_resource).call_deferred(p_resource);
 					return;
 				}
@@ -2974,12 +2979,19 @@ void EditorPropertyResource::_resource_selected(const Ref<Resource> &p_resource,
 	}
 
 	if (!p_inspect && use_sub_inspector) {
+		print_line("if z");
 		bool unfold = !get_edited_object()->editor_is_section_unfolded(get_edited_property());
 		get_edited_object()->editor_set_section_unfold(get_edited_property(), unfold);
 		update_property();
+		print_line("property name:",get_edited_property());
+		print_line("is class control: ",get_edited_object()->is_class("Control"));
+		print_line("is class Theme: ",get_edited_object()->is_class("Theme"));
+		print_line("is class Resource: ",get_edited_object()->is_class("Resource"));
 	} else {
+		print_line("else");
 		emit_signal(SNAME("resource_selected"), get_edited_property(), p_resource);
 	}
+	print_line("fn end");
 }
 
 static bool _find_recursive_resources(const Variant &v, HashSet<Resource *> &resources_found) {
@@ -3135,6 +3147,7 @@ void EditorPropertyResource::_sub_inspector_property_keyed(const String &p_prope
 }
 
 void EditorPropertyResource::_sub_inspector_resource_selected(const Ref<Resource> &p_resource, const String &p_property) {
+	print_line("sub inspector resource selected");
 	emit_signal(SNAME("resource_selected"), String(get_edited_property()) + ":" + p_property, p_resource);
 }
 
@@ -3143,8 +3156,10 @@ void EditorPropertyResource::_sub_inspector_object_id_selected(int p_id) {
 }
 
 void EditorPropertyResource::_open_editor_pressed() {
+	print_line("_open_editor_pressed func");
 	Ref<Resource> res = get_edited_property_value();
 	if (res.is_valid()) {
+		print_line("_open_editor_pressed func, res is valid(edit item call)");
 		// May clear the editor so do it deferred.
 		callable_mp(EditorNode::get_singleton(), &EditorNode::edit_item).call_deferred(res.ptr(), this);
 	}
@@ -3233,15 +3248,20 @@ void EditorPropertyResource::setup(Object *p_object, const String &p_path, const
 }
 
 void EditorPropertyResource::update_property() {
+	print_line("update property fuction:");
 	Ref<Resource> res = get_edited_property_value();
 
 	if (use_sub_inspector) {
+		print_line("use sub-insp");
 		if (res.is_valid() != resource_picker->is_toggle_mode()) {
+			print_line("resource is valid?");
 			resource_picker->set_toggle_mode(res.is_valid());
 		}
 
 		if (res.is_valid() && get_edited_object()->editor_is_section_unfolded(get_edited_property())) {
+			print_line("resource really is valid");
 			if (!sub_inspector) {
+				print_line("not subinsp");
 				sub_inspector = memnew(EditorInspector);
 				sub_inspector->set_vertical_scroll_mode(ScrollContainer::SCROLL_MODE_DISABLED);
 				sub_inspector->set_use_doc_hints(true);
@@ -3266,29 +3286,39 @@ void EditorPropertyResource::update_property() {
 				for (int i = 0; i < EditorNode::get_editor_data().get_editor_plugin_count(); i++) {
 					EditorPlugin *ep = EditorNode::get_editor_data().get_editor_plugin(i);
 					if (ep->handles(res.ptr())) {
+						print_line("handles");
+						if(res->get_base_extension() == "theme"){
+							ep->make_visible(true);
+						}
 						editor_list.push_back(ep);
 					}
 				}
 
 				if (!editor_list.is_empty()) {
 					// Open editor directly.
+					print_line("editor list not empty");
 					_open_editor_pressed();
 					opened_editor = true;
 				}
 			}
 
 			if (res.ptr() != sub_inspector->get_edited_object()) {
+				print_line("res ptr something check");
 				sub_inspector->edit(res.ptr());
+				print_line("sub insp edit call");
 				_update_property_bg();
 			}
 
 		} else {
+			print_line("last else");
 			if (sub_inspector) {
+				print_line("last subinsp");
 				set_bottom_editor(nullptr);
 				memdelete(sub_inspector);
 				sub_inspector = nullptr;
 
 				if (opened_editor) {
+					print_line("hide unused editor");
 					EditorNode::get_singleton()->hide_unused_editors();
 					opened_editor = false;
 				}

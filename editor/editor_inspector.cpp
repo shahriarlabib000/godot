@@ -4077,6 +4077,7 @@ void EditorInspector::_object_id_selected(const String &p_path, ObjectID p_id) {
 }
 
 void EditorInspector::_resource_selected(const String &p_path, Ref<Resource> p_resource) {
+	print_line("editor ins", p_path);
 	emit_signal(SNAME("resource_selected"), p_resource, p_path);
 }
 

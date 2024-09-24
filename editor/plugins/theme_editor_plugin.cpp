@@ -55,6 +55,7 @@
 #include "scene/theme/theme_db.h"
 
 void ThemeItemImportTree::_update_items_tree() {
+	print_line("1");
 	import_items_tree->clear();
 	TreeItem *root = import_items_tree->create_item();
 
@@ -324,6 +325,7 @@ void ThemeItemImportTree::_update_items_tree() {
 }
 
 void ThemeItemImportTree::_toggle_type_items(bool p_collapse) {
+	print_line("pls!");
 	TreeItem *root = import_items_tree->get_root();
 	if (!root) {
 		return;
@@ -337,10 +339,12 @@ void ThemeItemImportTree::_toggle_type_items(bool p_collapse) {
 }
 
 void ThemeItemImportTree::_filter_text_changed(const String &p_value) {
+	print_line("2");
 	_update_items_tree();
 }
 
 void ThemeItemImportTree::_store_selected_item(TreeItem *p_tree_item) {
+	print_line("3");
 	if (!p_tree_item->get_meta("_can_be_imported")) {
 		return;
 	}
@@ -375,6 +379,7 @@ void ThemeItemImportTree::_store_selected_item(TreeItem *p_tree_item) {
 }
 
 void ThemeItemImportTree::_restore_selected_item(TreeItem *p_tree_item) {
+	print_line("4");
 	if (!p_tree_item->get_meta("_can_be_imported")) {
 		return;
 	}
@@ -410,6 +415,7 @@ void ThemeItemImportTree::_restore_selected_item(TreeItem *p_tree_item) {
 }
 
 void ThemeItemImportTree::_update_total_selected(Theme::DataType p_data_type) {
+	print_line("5");
 	ERR_FAIL_INDEX_MSG(p_data_type, Theme::DATA_TYPE_MAX, "Theme item data type is out of bounds.");
 
 	Label *total_selected_items_label = nullptr;
@@ -465,6 +471,7 @@ void ThemeItemImportTree::_update_total_selected(Theme::DataType p_data_type) {
 }
 
 void ThemeItemImportTree::_tree_item_edited() {
+	print_line("6");
 	if (updating_tree) {
 		return;
 	}
@@ -494,6 +501,7 @@ void ThemeItemImportTree::_tree_item_edited() {
 }
 
 void ThemeItemImportTree::_check_propagated_to_tree_item(Object *p_obj, int p_column) {
+	print_line("7");
 	TreeItem *item = Object::cast_to<TreeItem>(p_obj);
 	// Skip "category" tree items by checking for children.
 	if (item && !item->get_first_child()) {
@@ -502,6 +510,7 @@ void ThemeItemImportTree::_check_propagated_to_tree_item(Object *p_obj, int p_co
 }
 
 void ThemeItemImportTree::_select_all_subitems(TreeItem *p_root_item, bool p_select_with_data) {
+	print_line("8");
 	TreeItem *child_item = p_root_item->get_first_child();
 	while (child_item) {
 		child_item->set_checked(IMPORT_ITEM, true);
@@ -516,6 +525,7 @@ void ThemeItemImportTree::_select_all_subitems(TreeItem *p_root_item, bool p_sel
 }
 
 void ThemeItemImportTree::_deselect_all_subitems(TreeItem *p_root_item, bool p_deselect_completely) {
+	print_line("9");
 	TreeItem *child_item = p_root_item->get_first_child();
 	while (child_item) {
 		child_item->set_checked(IMPORT_ITEM_DATA, false);
@@ -530,6 +540,7 @@ void ThemeItemImportTree::_deselect_all_subitems(TreeItem *p_root_item, bool p_d
 }
 
 void ThemeItemImportTree::_select_all_items_pressed() {
+	print_line("10");
 	if (updating_tree) {
 		return;
 	}
@@ -543,6 +554,7 @@ void ThemeItemImportTree::_select_all_items_pressed() {
 }
 
 void ThemeItemImportTree::_select_full_items_pressed() {
+	print_line("11");
 	if (updating_tree) {
 		return;
 	}
@@ -556,6 +568,7 @@ void ThemeItemImportTree::_select_full_items_pressed() {
 }
 
 void ThemeItemImportTree::_deselect_all_items_pressed() {
+	print_line("12");
 	if (updating_tree) {
 		return;
 	}
@@ -569,6 +582,7 @@ void ThemeItemImportTree::_deselect_all_items_pressed() {
 }
 
 void ThemeItemImportTree::_select_all_data_type_pressed(int p_data_type) {
+	print_line("13");
 	ERR_FAIL_INDEX_MSG(p_data_type, Theme::DATA_TYPE_MAX, "Theme item data type is out of bounds.");
 
 	if (updating_tree) {
@@ -624,6 +638,7 @@ void ThemeItemImportTree::_select_all_data_type_pressed(int p_data_type) {
 }
 
 void ThemeItemImportTree::_select_full_data_type_pressed(int p_data_type) {
+	print_line("14");
 	ERR_FAIL_INDEX_MSG(p_data_type, Theme::DATA_TYPE_MAX, "Theme item data type is out of bounds.");
 
 	if (updating_tree) {
@@ -681,6 +696,7 @@ void ThemeItemImportTree::_select_full_data_type_pressed(int p_data_type) {
 }
 
 void ThemeItemImportTree::_deselect_all_data_type_pressed(int p_data_type) {
+	print_line("15");
 	ERR_FAIL_INDEX_MSG(p_data_type, Theme::DATA_TYPE_MAX, "Theme item data type is out of bounds.");
 
 	if (updating_tree) {
@@ -738,6 +754,7 @@ void ThemeItemImportTree::_deselect_all_data_type_pressed(int p_data_type) {
 }
 
 void ThemeItemImportTree::_import_selected() {
+	print_line("16");
 	if (selected_items.size() == 0) {
 		EditorNode::get_singleton()->show_accept(TTR("Nothing was selected for the import."), TTR("OK"));
 		return;
@@ -827,14 +844,17 @@ void ThemeItemImportTree::_import_selected() {
 }
 
 void ThemeItemImportTree::set_edited_theme(const Ref<Theme> &p_theme) {
+	print_line("17");
 	edited_theme = p_theme;
 }
 
 void ThemeItemImportTree::set_base_theme(const Ref<Theme> &p_theme) {
+	print_line("18");
 	base_theme = p_theme;
 }
 
 void ThemeItemImportTree::reset_item_tree() {
+	print_line("19");
 	import_items_filter->clear();
 	selected_items.clear();
 
@@ -849,10 +869,12 @@ void ThemeItemImportTree::reset_item_tree() {
 }
 
 bool ThemeItemImportTree::has_selected_items() const {
+	print_line("20");
 	return (selected_items.size() > 0);
 }
 
 void ThemeItemImportTree::_notification(int p_what) {
+	print_line("21");
 	switch (p_what) {
 		case NOTIFICATION_THEME_CHANGED: {
 			select_icons_warning_icon->set_texture(get_editor_theme_icon(SNAME("StatusWarning")));
@@ -903,10 +925,12 @@ void ThemeItemImportTree::_notification(int p_what) {
 }
 
 void ThemeItemImportTree::_bind_methods() {
+	print_line("22");
 	ADD_SIGNAL(MethodInfo("items_imported"));
 }
 
 ThemeItemImportTree::ThemeItemImportTree() {
+	print_line("23");
 	import_items_filter = memnew(LineEdit);
 	import_items_filter->set_placeholder(TTR("Filter Items"));
 	import_items_filter->set_clear_button_enabled(true);
@@ -1198,6 +1222,7 @@ ThemeItemImportTree::ThemeItemImportTree() {
 ///////////////////////
 
 void ThemeItemEditorDialog::ok_pressed() {
+	print_line("24");
 	if (import_default_theme_items->has_selected_items() || import_editor_theme_items->has_selected_items() || import_other_theme_items->has_selected_items()) {
 		confirm_closing_dialog->set_text(TTR("Import Items tab has some items selected. Selection will be lost upon closing this window.\nClose anyway?"));
 		confirm_closing_dialog->popup_centered(Size2(380, 120) * EDSCALE);
@@ -1208,10 +1233,12 @@ void ThemeItemEditorDialog::ok_pressed() {
 }
 
 void ThemeItemEditorDialog::_close_dialog() {
+	print_line("25");
 	hide();
 }
 
 void ThemeItemEditorDialog::_dialog_about_to_show() {
+	print_line("about to show");
 	ERR_FAIL_COND_MSG(edited_theme.is_null(), "Invalid state of the Theme Editor; the Theme resource is missing.");
 
 	_update_edit_types();
@@ -1229,6 +1256,7 @@ void ThemeItemEditorDialog::_dialog_about_to_show() {
 }
 
 void ThemeItemEditorDialog::_update_edit_types() {
+	print_line("26");
 	Ref<Theme> base_theme = ThemeDB::get_singleton()->get_default_theme();
 
 	List<StringName> theme_types;
@@ -1306,12 +1334,14 @@ void ThemeItemEditorDialog::_update_edit_types() {
 }
 
 void ThemeItemEditorDialog::_edited_type_selected() {
+	print_line("27");
 	TreeItem *selected_item = edit_type_list->get_selected();
 	String selected_type = selected_item->get_text(0);
 	_update_edit_item_tree(selected_type);
 }
 
 void ThemeItemEditorDialog::_edited_type_button_pressed(Object *p_item, int p_column, int p_id, MouseButton p_button) {
+	print_line("28");
 	if (p_button != MouseButton::LEFT) {
 		return;
 	}
@@ -1330,6 +1360,7 @@ void ThemeItemEditorDialog::_edited_type_button_pressed(Object *p_item, int p_co
 }
 
 void ThemeItemEditorDialog::_update_edit_item_tree(String p_item_type) {
+	print_line("29");
 	edited_item_type = p_item_type;
 
 	edit_items_tree->clear();
@@ -1490,6 +1521,7 @@ void ThemeItemEditorDialog::_update_edit_item_tree(String p_item_type) {
 }
 
 void ThemeItemEditorDialog::_item_tree_button_pressed(Object *p_item, int p_column, int p_id, MouseButton p_button) {
+	print_line("imma lose my mind if this is not it");
 	if (p_button != MouseButton::LEFT) {
 		return;
 	}
@@ -1526,6 +1558,7 @@ void ThemeItemEditorDialog::_item_tree_button_pressed(Object *p_item, int p_colu
 }
 
 void ThemeItemEditorDialog::_add_theme_type(const String &p_new_text) {
+	print_line("30");
 	const String new_type = edit_add_type_value->get_text().strip_edges();
 	edit_add_type_value->clear();
 
@@ -1541,6 +1574,7 @@ void ThemeItemEditorDialog::_add_theme_type(const String &p_new_text) {
 }
 
 void ThemeItemEditorDialog::_add_theme_item(Theme::DataType p_data_type, String p_item_name, String p_item_type) {
+	print_line("31");
 	EditorUndoRedoManager *ur = EditorUndoRedoManager::get_singleton();
 	ur->create_action(TTR("Create Theme Item"));
 
@@ -1583,6 +1617,7 @@ void ThemeItemEditorDialog::_add_theme_item(Theme::DataType p_data_type, String 
 }
 
 void ThemeItemEditorDialog::_remove_theme_type(const String &p_theme_type) {
+	print_line("32");
 	Ref<Theme> old_snapshot = edited_theme->duplicate();
 	Ref<Theme> new_snapshot = edited_theme->duplicate();
 
@@ -1604,6 +1639,7 @@ void ThemeItemEditorDialog::_remove_theme_type(const String &p_theme_type) {
 }
 
 void ThemeItemEditorDialog::_remove_data_type_items(Theme::DataType p_data_type, String p_item_type) {
+	print_line("33");
 	List<StringName> names;
 
 	Ref<Theme> old_snapshot = edited_theme->duplicate();
@@ -1633,6 +1669,7 @@ void ThemeItemEditorDialog::_remove_data_type_items(Theme::DataType p_data_type,
 }
 
 void ThemeItemEditorDialog::_remove_class_items() {
+	print_line("34");
 	List<StringName> names;
 
 	Ref<Theme> old_snapshot = edited_theme->duplicate();
@@ -1669,6 +1706,7 @@ void ThemeItemEditorDialog::_remove_class_items() {
 }
 
 void ThemeItemEditorDialog::_remove_custom_items() {
+	print_line("35");
 	List<StringName> names;
 
 	Ref<Theme> old_snapshot = edited_theme->duplicate();
@@ -1705,6 +1743,7 @@ void ThemeItemEditorDialog::_remove_custom_items() {
 }
 
 void ThemeItemEditorDialog::_remove_all_items() {
+	print_line("36");
 	List<StringName> names;
 
 	Ref<Theme> old_snapshot = edited_theme->duplicate();
@@ -1739,6 +1778,7 @@ void ThemeItemEditorDialog::_remove_all_items() {
 }
 
 void ThemeItemEditorDialog::_open_add_theme_item_dialog(int p_data_type) {
+	print_line("37");
 	ERR_FAIL_INDEX_MSG(p_data_type, Theme::DATA_TYPE_MAX, "Theme item data type is out of bounds.");
 
 	item_popup_mode = CREATE_THEME_ITEM;
@@ -1774,6 +1814,7 @@ void ThemeItemEditorDialog::_open_add_theme_item_dialog(int p_data_type) {
 }
 
 void ThemeItemEditorDialog::_open_rename_theme_item_dialog(Theme::DataType p_data_type, String p_item_name) {
+	print_line("38");
 	ERR_FAIL_INDEX_MSG(p_data_type, Theme::DATA_TYPE_MAX, "Theme item data type is out of bounds.");
 
 	item_popup_mode = RENAME_THEME_ITEM;
@@ -1811,6 +1852,7 @@ void ThemeItemEditorDialog::_open_rename_theme_item_dialog(Theme::DataType p_dat
 }
 
 void ThemeItemEditorDialog::_confirm_edit_theme_item() {
+	print_line("39");
 	if (item_popup_mode == CREATE_THEME_ITEM) {
 		_add_theme_item(edit_item_data_type, theme_item_name->get_text(), edited_item_type);
 	} else if (item_popup_mode == RENAME_THEME_ITEM) {
@@ -1832,6 +1874,7 @@ void ThemeItemEditorDialog::_confirm_edit_theme_item() {
 }
 
 void ThemeItemEditorDialog::_edit_theme_item_gui_input(const Ref<InputEvent> &p_event) {
+	print_line("40");
 	Ref<InputEventKey> k = p_event;
 
 	if (k.is_valid()) {
@@ -1851,10 +1894,12 @@ void ThemeItemEditorDialog::_edit_theme_item_gui_input(const Ref<InputEvent> &p_
 }
 
 void ThemeItemEditorDialog::_open_select_another_theme() {
+	print_line("41");
 	import_another_theme_dialog->popup_file_dialog();
 }
 
 void ThemeItemEditorDialog::_select_another_theme_cbk(const String &p_path) {
+	print_line("42");
 	Ref<Theme> loaded_theme = ResourceLoader::load(p_path);
 	if (loaded_theme.is_null()) {
 		EditorNode::get_singleton()->show_warning(TTR("Invalid file, not a Theme resource."));
@@ -1871,6 +1916,7 @@ void ThemeItemEditorDialog::_select_another_theme_cbk(const String &p_path) {
 }
 
 void ThemeItemEditorDialog::_notification(int p_what) {
+	print_line("43");
 	switch (p_what) {
 		case NOTIFICATION_ENTER_TREE: {
 			connect("about_to_popup", callable_mp(this, &ThemeItemEditorDialog::_dialog_about_to_show));
@@ -1896,15 +1942,18 @@ void ThemeItemEditorDialog::_notification(int p_what) {
 }
 
 void ThemeItemEditorDialog::_bind_methods() {
+	print_line("bind");
 	ClassDB::bind_method(D_METHOD("_update_edit_types"), &ThemeItemEditorDialog::_update_edit_types);
 	ClassDB::bind_method(D_METHOD("_update_edit_item_tree"), &ThemeItemEditorDialog::_update_edit_item_tree);
 }
 
 void ThemeItemEditorDialog::set_edited_theme(const Ref<Theme> &p_theme) {
+	print_line("44");
 	edited_theme = p_theme;
 }
 
 ThemeItemEditorDialog::ThemeItemEditorDialog(ThemeTypeEditor *p_theme_type_editor) {
+	print_line("45");
 	set_title(TTR("Manage Theme Items"));
 	set_ok_button_text(TTR("Close"));
 	set_hide_on_ok(false); // Closing may require a confirmation in some cases.
@@ -2126,6 +2175,7 @@ ThemeItemEditorDialog::ThemeItemEditorDialog(ThemeTypeEditor *p_theme_type_edito
 ///////////////////////
 
 void ThemeTypeDialog::_dialog_about_to_show() {
+	print_line("46");
 	add_type_filter->set_text("");
 	add_type_filter->grab_focus();
 
@@ -2133,10 +2183,12 @@ void ThemeTypeDialog::_dialog_about_to_show() {
 }
 
 void ThemeTypeDialog::ok_pressed() {
+	print_line("47");
 	_add_type_selected(add_type_filter->get_text().strip_edges());
 }
 
 void ThemeTypeDialog::_update_add_type_options(const String &p_filter) {
+	print_line("48");
 	add_type_options->clear();
 
 	List<StringName> names;
@@ -2171,10 +2223,12 @@ void ThemeTypeDialog::_update_add_type_options(const String &p_filter) {
 }
 
 void ThemeTypeDialog::_add_type_filter_cbk(const String &p_value) {
+	print_line("49");
 	_update_add_type_options(p_value);
 }
 
 void ThemeTypeDialog::_type_filter_input(const Ref<InputEvent> &p_event) {
+	print_line("50");
 	// Redirect navigational key events to the item list.
 	Ref<InputEventKey> key = p_event;
 	if (key.is_valid()) {
@@ -2186,19 +2240,23 @@ void ThemeTypeDialog::_type_filter_input(const Ref<InputEvent> &p_event) {
 }
 
 void ThemeTypeDialog::_add_type_options_cbk(int p_index) {
+	print_line("51");
 	add_type_filter->set_text(add_type_options->get_item_text(p_index));
 	add_type_filter->set_caret_column(add_type_filter->get_text().length());
 }
 
 void ThemeTypeDialog::_add_type_dialog_entered(const String &p_value) {
+	print_line("52");
 	_add_type_selected(p_value.strip_edges());
 }
 
 void ThemeTypeDialog::_add_type_dialog_activated(int p_index) {
+	print_line("53");
 	_add_type_selected(add_type_options->get_item_text(p_index));
 }
 
 void ThemeTypeDialog::_add_type_selected(const String &p_type_name) {
+	print_line("54");
 	pre_submitted_value = p_type_name;
 	if (p_type_name.is_empty()) {
 		add_type_confirmation->popup_centered();
@@ -2209,11 +2267,13 @@ void ThemeTypeDialog::_add_type_selected(const String &p_type_name) {
 }
 
 void ThemeTypeDialog::_add_type_confirmed() {
+	print_line("55");
 	emit_signal(SNAME("type_selected"), pre_submitted_value);
 	hide();
 }
 
 void ThemeTypeDialog::_notification(int p_what) {
+	print_line("56");
 	switch (p_what) {
 		case NOTIFICATION_ENTER_TREE: {
 			connect("about_to_popup", callable_mp(this, &ThemeTypeDialog::_dialog_about_to_show));
@@ -2232,18 +2292,22 @@ void ThemeTypeDialog::_notification(int p_what) {
 }
 
 void ThemeTypeDialog::_bind_methods() {
+	print_line("57");
 	ADD_SIGNAL(MethodInfo("type_selected", PropertyInfo(Variant::STRING, "type_name")));
 }
 
 void ThemeTypeDialog::set_edited_theme(const Ref<Theme> &p_theme) {
+	print_line("58");
 	edited_theme = p_theme;
 }
 
 void ThemeTypeDialog::set_include_own_types(bool p_enable) {
+	print_line("59");
 	include_own_types = p_enable;
 }
 
 ThemeTypeDialog::ThemeTypeDialog() {
+	print_line("60");
 	set_hide_on_ok(false);
 
 	VBoxContainer *add_type_vb = memnew(VBoxContainer);
@@ -2280,12 +2344,14 @@ ThemeTypeDialog::ThemeTypeDialog() {
 ///////////////////////
 
 Control *ThemeItemLabel::make_custom_tooltip(const String &p_text) const {
+	print_line("61");
 	EditorHelpBit *help_bit = memnew(EditorHelpBit(p_text));
 	EditorHelpBitTooltip::show_tooltip(help_bit, const_cast<ThemeItemLabel *>(this));
 	return memnew(Control); // Make the standard tooltip invisible.
 }
 
 VBoxContainer *ThemeTypeEditor::_create_item_list(Theme::DataType p_data_type) {
+	print_line("62");
 	VBoxContainer *items_tab = memnew(VBoxContainer);
 	items_tab->set_custom_minimum_size(Size2(0, 160) * EDSCALE);
 	data_type_tabs->add_child(items_tab);
@@ -2317,6 +2383,7 @@ VBoxContainer *ThemeTypeEditor::_create_item_list(Theme::DataType p_data_type) {
 }
 
 void ThemeTypeEditor::_update_type_list() {
+	print_line("63");
 	ERR_FAIL_COND(edited_theme.is_null());
 
 	if (updating) {
@@ -2390,10 +2457,12 @@ void ThemeTypeEditor::_update_type_list() {
 }
 
 void ThemeTypeEditor::_update_type_list_debounced() {
+	print_line("64");
 	update_debounce_timer->start();
 }
 
 HashMap<StringName, bool> ThemeTypeEditor::_get_type_items(String p_type_name, Theme::DataType p_type, bool p_include_default) {
+	print_line("65");
 	HashMap<StringName, bool> items;
 	List<StringName> names;
 
@@ -2456,6 +2525,7 @@ HashMap<StringName, bool> ThemeTypeEditor::_get_type_items(String p_type_name, T
 }
 
 HBoxContainer *ThemeTypeEditor::_create_property_control(Theme::DataType p_data_type, String p_item_name, bool p_editable) {
+	print_line("66");
 	HBoxContainer *item_control = memnew(HBoxContainer);
 
 	HBoxContainer *item_name_container = memnew(HBoxContainer);
@@ -2524,10 +2594,12 @@ HBoxContainer *ThemeTypeEditor::_create_property_control(Theme::DataType p_data_
 }
 
 void ThemeTypeEditor::_add_focusable(Control *p_control) {
+print_line("67");
 	focusables.append(p_control);
 }
 
 void ThemeTypeEditor::_update_type_items() {
+	print_line("68");
 	bool show_default = show_default_items_button->is_pressed();
 
 	focusables.clear();
@@ -2800,11 +2872,13 @@ void ThemeTypeEditor::_update_type_items() {
 }
 
 void ThemeTypeEditor::_list_type_selected(int p_index) {
+	print_line("69 nice!");
 	edited_type = theme_type_list->get_item_text(p_index);
 	_update_type_items();
 }
 
 void ThemeTypeEditor::_add_type_button_cbk() {
+	print_line("70");
 	add_type_mode = ADD_THEME_TYPE;
 	add_type_dialog->set_title(TTR("Add Item Type"));
 	add_type_dialog->set_ok_button_text(TTR("Add Type"));
@@ -2813,6 +2887,7 @@ void ThemeTypeEditor::_add_type_button_cbk() {
 }
 
 void ThemeTypeEditor::_add_default_type_items() {
+	print_line("71");
 	List<StringName> names;
 	String default_type = edited_type;
 	if (edited_theme->get_type_variation_base(edited_type) != StringName()) {
@@ -2895,11 +2970,13 @@ void ThemeTypeEditor::_add_default_type_items() {
 }
 
 void ThemeTypeEditor::_update_add_button(const String &p_text, LineEdit *p_for_edit) {
+	print_line("72");
 	Button *button = Object::cast_to<Button>(p_for_edit->get_meta("button"));
 	button->set_disabled(p_text.strip_edges().is_empty());
 }
 
 void ThemeTypeEditor::_item_add_cbk(int p_data_type, Control *p_control) {
+	print_line("73");
 	LineEdit *le = Object::cast_to<LineEdit>(p_control);
 	if (le->get_text().strip_edges().is_empty()) {
 		return;
@@ -2948,10 +3025,12 @@ void ThemeTypeEditor::_item_add_cbk(int p_data_type, Control *p_control) {
 }
 
 void ThemeTypeEditor::_item_add_lineedit_cbk(String p_value, int p_data_type, Control *p_control) {
+	print_line("74");
 	_item_add_cbk(p_data_type, p_control);
 }
 
 void ThemeTypeEditor::_item_override_cbk(int p_data_type, String p_item_name) {
+	print_line("75");
 	EditorUndoRedoManager *ur = EditorUndoRedoManager::get_singleton();
 	ur->create_action(TTR("Override Theme Item"));
 
@@ -2991,6 +3070,7 @@ void ThemeTypeEditor::_item_override_cbk(int p_data_type, String p_item_name) {
 }
 
 void ThemeTypeEditor::_item_remove_cbk(int p_data_type, String p_item_name) {
+	print_line("76");
 	EditorUndoRedoManager *ur = EditorUndoRedoManager::get_singleton();
 	ur->create_action(TTR("Remove Theme Item"));
 
@@ -3043,6 +3123,7 @@ void ThemeTypeEditor::_item_remove_cbk(int p_data_type, String p_item_name) {
 }
 
 void ThemeTypeEditor::_item_rename_cbk(int p_data_type, String p_item_name, Control *p_control) {
+	print_line("77");
 	// Label
 	Object::cast_to<Label>(p_control->get_child(0))->hide();
 	// Label buttons
@@ -3058,6 +3139,7 @@ void ThemeTypeEditor::_item_rename_cbk(int p_data_type, String p_item_name, Cont
 }
 
 void ThemeTypeEditor::_item_rename_confirmed(int p_data_type, String p_item_name, Control *p_control) {
+	print_line("78");
 	LineEdit *le = Object::cast_to<LineEdit>(p_control->get_child(1));
 	if (le->get_text().strip_edges().is_empty()) {
 		return;
@@ -3107,10 +3189,12 @@ void ThemeTypeEditor::_item_rename_confirmed(int p_data_type, String p_item_name
 }
 
 void ThemeTypeEditor::_item_rename_entered(String p_value, int p_data_type, String p_item_name, Control *p_control) {
+	print_line("79");
 	_item_rename_confirmed(p_data_type, p_item_name, p_control);
 }
 
 void ThemeTypeEditor::_item_rename_canceled(int p_data_type, String p_item_name, Control *p_control) {
+	print_line("80");
 	// LineEdit
 	Object::cast_to<LineEdit>(p_control->get_child(1))->hide();
 	// LineEdit buttons
@@ -3125,6 +3209,7 @@ void ThemeTypeEditor::_item_rename_canceled(int p_data_type, String p_item_name,
 }
 
 void ThemeTypeEditor::_color_item_changed(Color p_value, String p_item_name) {
+	print_line("81");
 	EditorUndoRedoManager *ur = EditorUndoRedoManager::get_singleton();
 	ur->create_action(TTR("Set Color Item in Theme"), UndoRedo::MERGE_ENDS);
 	ur->add_do_method(*edited_theme, "set_color", p_item_name, edited_type, p_value);
@@ -3133,6 +3218,7 @@ void ThemeTypeEditor::_color_item_changed(Color p_value, String p_item_name) {
 }
 
 void ThemeTypeEditor::_constant_item_changed(float p_value, String p_item_name) {
+	print_line("82");
 	EditorUndoRedoManager *ur = EditorUndoRedoManager::get_singleton();
 	ur->create_action(TTR("Set Constant Item in Theme"));
 	ur->add_do_method(*edited_theme, "set_constant", p_item_name, edited_type, p_value);
@@ -3141,6 +3227,7 @@ void ThemeTypeEditor::_constant_item_changed(float p_value, String p_item_name) 
 }
 
 void ThemeTypeEditor::_font_size_item_changed(float p_value, String p_item_name) {
+	print_line("83");
 	EditorUndoRedoManager *ur = EditorUndoRedoManager::get_singleton();
 	ur->create_action(TTR("Set Font Size Item in Theme"));
 	ur->add_do_method(*edited_theme, "set_font_size", p_item_name, edited_type, p_value);
@@ -3149,10 +3236,12 @@ void ThemeTypeEditor::_font_size_item_changed(float p_value, String p_item_name)
 }
 
 void ThemeTypeEditor::_edit_resource_item(Ref<Resource> p_resource, bool p_edit) {
+	print_line("84");
 	EditorNode::get_singleton()->edit_resource(p_resource);
 }
 
 void ThemeTypeEditor::_font_item_changed(Ref<Font> p_value, String p_item_name) {
+	print_line("85");
 	EditorUndoRedoManager *ur = EditorUndoRedoManager::get_singleton();
 	ur->create_action(TTR("Set Font Item in Theme"));
 
@@ -3170,6 +3259,7 @@ void ThemeTypeEditor::_font_item_changed(Ref<Font> p_value, String p_item_name) 
 }
 
 void ThemeTypeEditor::_icon_item_changed(Ref<Texture2D> p_value, String p_item_name) {
+	print_line("86");
 	EditorUndoRedoManager *ur = EditorUndoRedoManager::get_singleton();
 	ur->create_action(TTR("Set Icon Item in Theme"));
 
@@ -3187,6 +3277,7 @@ void ThemeTypeEditor::_icon_item_changed(Ref<Texture2D> p_value, String p_item_n
 }
 
 void ThemeTypeEditor::_stylebox_item_changed(Ref<StyleBox> p_value, String p_item_name) {
+	print_line("87");
 	EditorUndoRedoManager *ur = EditorUndoRedoManager::get_singleton();
 	ur->create_action(TTR("Set Stylebox Item in Theme"));
 
@@ -3207,6 +3298,7 @@ void ThemeTypeEditor::_stylebox_item_changed(Ref<StyleBox> p_value, String p_ite
 }
 
 void ThemeTypeEditor::_change_pinned_stylebox() {
+	print_line("88");
 	if (leading_stylebox.pinned) {
 		if (leading_stylebox.stylebox.is_valid()) {
 			leading_stylebox.stylebox->disconnect_changed(callable_mp(this, &ThemeTypeEditor::_update_stylebox_from_leading));
@@ -3225,6 +3317,7 @@ void ThemeTypeEditor::_change_pinned_stylebox() {
 }
 
 void ThemeTypeEditor::_on_pin_leader_button_pressed(Control *p_editor, String p_item_name) {
+	print_line("89");
 	Ref<StyleBox> stylebox;
 	if (Object::cast_to<EditorResourcePicker>(p_editor)) {
 		stylebox = Object::cast_to<EditorResourcePicker>(p_editor)->get_edited_resource();
@@ -3244,6 +3337,7 @@ void ThemeTypeEditor::_on_pin_leader_button_pressed(Control *p_editor, String p_
 }
 
 void ThemeTypeEditor::_pin_leading_stylebox(String p_item_name, Ref<StyleBox> p_stylebox) {
+	print_line("90");
 	if (leading_stylebox.stylebox.is_valid()) {
 		leading_stylebox.stylebox->disconnect_changed(callable_mp(this, &ThemeTypeEditor::_update_stylebox_from_leading));
 	}
@@ -3263,6 +3357,7 @@ void ThemeTypeEditor::_pin_leading_stylebox(String p_item_name, Ref<StyleBox> p_
 }
 
 void ThemeTypeEditor::_on_unpin_leader_button_pressed() {
+	print_line("91");
 	EditorUndoRedoManager *ur = EditorUndoRedoManager::get_singleton();
 	ur->create_action(TTR("Unpin Stylebox"));
 	ur->add_do_method(this, "_unpin_leading_stylebox");
@@ -3271,6 +3366,7 @@ void ThemeTypeEditor::_on_unpin_leader_button_pressed() {
 }
 
 void ThemeTypeEditor::_unpin_leading_stylebox() {
+	print_line("92");
 	if (leading_stylebox.stylebox.is_valid()) {
 		leading_stylebox.stylebox->disconnect_changed(callable_mp(this, &ThemeTypeEditor::_update_stylebox_from_leading));
 	}
@@ -3283,6 +3379,7 @@ void ThemeTypeEditor::_unpin_leading_stylebox() {
 }
 
 void ThemeTypeEditor::_update_stylebox_from_leading() {
+	print_line("93");
 	if (!leading_stylebox.pinned || leading_stylebox.stylebox.is_null()) {
 		return;
 	}
@@ -3333,6 +3430,7 @@ void ThemeTypeEditor::_update_stylebox_from_leading() {
 }
 
 void ThemeTypeEditor::_type_variation_changed(const String p_value) {
+	print_line("94");
 	EditorUndoRedoManager *ur = EditorUndoRedoManager::get_singleton();
 	ur->create_action(TTR("Set Theme Type Variation"));
 
@@ -3352,6 +3450,7 @@ void ThemeTypeEditor::_type_variation_changed(const String p_value) {
 }
 
 void ThemeTypeEditor::_add_type_variation_cbk() {
+	print_line("95");
 	add_type_mode = ADD_VARIATION_BASE;
 	add_type_dialog->set_title(TTR("Set Variation Base Type"));
 	add_type_dialog->set_ok_button_text(TTR("Set Base Type"));
@@ -3360,6 +3459,7 @@ void ThemeTypeEditor::_add_type_variation_cbk() {
 }
 
 void ThemeTypeEditor::_add_type_dialog_selected(const String p_type_name) {
+	print_line("96");
 	if (add_type_mode == ADD_THEME_TYPE) {
 		select_type(p_type_name);
 	} else if (add_type_mode == ADD_VARIATION_BASE) {
@@ -3368,6 +3468,7 @@ void ThemeTypeEditor::_add_type_dialog_selected(const String p_type_name) {
 }
 
 void ThemeTypeEditor::_notification(int p_what) {
+	print_line("97");
 	switch (p_what) {
 		case NOTIFICATION_ENTER_TREE:
 		case NOTIFICATION_THEME_CHANGED: {
@@ -3387,6 +3488,7 @@ void ThemeTypeEditor::_notification(int p_what) {
 }
 
 void ThemeTypeEditor::_bind_methods() {
+	print_line("bind2");
 	ClassDB::bind_method(D_METHOD("_update_type_items"), &ThemeTypeEditor::_update_type_items);
 	ClassDB::bind_method(D_METHOD("_pin_leading_stylebox"), &ThemeTypeEditor::_pin_leading_stylebox);
 	ClassDB::bind_method(D_METHOD("_unpin_leading_stylebox"), &ThemeTypeEditor::_unpin_leading_stylebox);
@@ -3394,6 +3496,7 @@ void ThemeTypeEditor::_bind_methods() {
 }
 
 void ThemeTypeEditor::set_edited_theme(const Ref<Theme> &p_theme) {
+	print_line("98");
 	if (edited_theme.is_valid()) {
 		edited_theme->disconnect_changed(callable_mp(this, &ThemeTypeEditor::_update_type_list_debounced));
 	}
@@ -3408,6 +3511,7 @@ void ThemeTypeEditor::set_edited_theme(const Ref<Theme> &p_theme) {
 }
 
 void ThemeTypeEditor::select_type(String p_type_name) {
+	print_line("99");
 	edited_type = p_type_name;
 	bool type_exists = false;
 
@@ -3435,6 +3539,7 @@ void ThemeTypeEditor::select_type(String p_type_name) {
 }
 
 bool ThemeTypeEditor::is_stylebox_pinned(Ref<StyleBox> p_stylebox) {
+	print_line("100");
 	return leading_stylebox.pinned && leading_stylebox.stylebox == p_stylebox;
 }
 
@@ -3546,6 +3651,7 @@ ThemeTypeEditor::ThemeTypeEditor() {
 ///////////////////////
 
 void ThemeEditor::edit(const Ref<Theme> &p_theme) {
+	print_line("101");
 	if (theme == p_theme) {
 		return;
 	}
@@ -3569,10 +3675,12 @@ void ThemeEditor::edit(const Ref<Theme> &p_theme) {
 }
 
 Ref<Theme> ThemeEditor::get_edited_theme() {
+	print_line("102");
 	return theme;
 }
 
 void ThemeEditor::_theme_save_button_cbk(bool p_save_as) {
+	print_line("103");
 	ERR_FAIL_COND_MSG(theme.is_null(), "Invalid state of the Theme Editor; the Theme resource is missing.");
 
 	if (p_save_as) {
@@ -3583,10 +3691,12 @@ void ThemeEditor::_theme_save_button_cbk(bool p_save_as) {
 }
 
 void ThemeEditor::_theme_edit_button_cbk() {
+	print_line("104");
 	theme_edit_dialog->popup_centered(Size2(850, 700) * EDSCALE);
 }
 
 void ThemeEditor::_theme_close_button_cbk() {
+	print_line("105");
 	plugin->make_visible(false); // Enables auto hide.
 	if (theme.is_valid() && InspectorDock::get_inspector_singleton()->get_edited_object() == theme.ptr()) {
 		EditorNode::get_singleton()->push_item(nullptr);
@@ -3597,10 +3707,12 @@ void ThemeEditor::_theme_close_button_cbk() {
 }
 
 void ThemeEditor::_add_preview_button_cbk() {
+	print_line("106");
 	preview_scene_dialog->popup_file_dialog();
 }
 
 void ThemeEditor::_preview_scene_dialog_cbk(const String &p_path) {
+	print_line("107");
 	SceneThemeEditorPreview *preview_tab = memnew(SceneThemeEditorPreview);
 	if (!preview_tab->set_preview_scene(p_path)) {
 		return;
@@ -3612,6 +3724,7 @@ void ThemeEditor::_preview_scene_dialog_cbk(const String &p_path) {
 }
 
 void ThemeEditor::_add_preview_tab(ThemeEditorPreview *p_preview_tab, const String &p_preview_name, const Ref<Texture2D> &p_icon) {
+	print_line("108");
 	p_preview_tab->set_preview_theme(theme);
 
 	preview_tabs->add_tab(p_preview_name, p_icon);
@@ -3623,6 +3736,7 @@ void ThemeEditor::_add_preview_tab(ThemeEditorPreview *p_preview_tab, const Stri
 }
 
 void ThemeEditor::_change_preview_tab(int p_tab) {
+	print_line("109");
 	ERR_FAIL_INDEX_MSG(p_tab, preview_tabs_content->get_child_count(), "Attempting to open a preview tab that doesn't exist.");
 
 	for (int i = 0; i < preview_tabs_content->get_child_count(); i++) {
@@ -3636,6 +3750,7 @@ void ThemeEditor::_change_preview_tab(int p_tab) {
 }
 
 void ThemeEditor::_remove_preview_tab(int p_tab) {
+	print_line("110");
 	ERR_FAIL_INDEX_MSG(p_tab, preview_tabs_content->get_child_count(), "Attempting to remove a preview tab that doesn't exist.");
 
 	ThemeEditorPreview *preview_tab = Object::cast_to<ThemeEditorPreview>(preview_tabs_content->get_child(p_tab));
@@ -3651,7 +3766,7 @@ void ThemeEditor::_remove_preview_tab(int p_tab) {
 		}
 
 		preview_tabs_content->remove_child(preview_tab);
-		preview_tab->queue_free();
+		//preview_tab->queue_free();
 
 		preview_tabs->remove_tab(p_tab);
 		_change_preview_tab(preview_tabs->get_current_tab());
@@ -3659,11 +3774,13 @@ void ThemeEditor::_remove_preview_tab(int p_tab) {
 }
 
 void ThemeEditor::_remove_preview_tab_invalid(Node *p_tab_control) {
+	print_line("111");
 	int tab_index = p_tab_control->get_index();
 	_remove_preview_tab(tab_index);
 }
 
 void ThemeEditor::_update_preview_tab(Node *p_tab_control) {
+	print_line("112");
 	if (!Object::cast_to<SceneThemeEditorPreview>(p_tab_control)) {
 		return;
 	}
@@ -3674,10 +3791,12 @@ void ThemeEditor::_update_preview_tab(Node *p_tab_control) {
 }
 
 void ThemeEditor::_preview_control_picked(String p_class_name) {
+	print_line("what");
 	theme_type_editor->select_type(p_class_name);
 }
 
 void ThemeEditor::_notification(int p_what) {
+	print_line("114");
 	switch (p_what) {
 		case NOTIFICATION_ENTER_TREE:
 		case NOTIFICATION_THEME_CHANGED: {
@@ -3691,6 +3810,7 @@ void ThemeEditor::_notification(int p_what) {
 }
 
 ThemeEditor::ThemeEditor() {
+	print_line("115");
 	HBoxContainer *top_menu = memnew(HBoxContainer);
 	add_child(top_menu);
 
@@ -3786,14 +3906,17 @@ ThemeEditor::ThemeEditor() {
 ///////////////////////
 
 void ThemeEditorPlugin::edit(Object *p_object) {
+	print_line("116");
 	theme_editor->edit(Ref<Theme>(p_object));
 }
 
 bool ThemeEditorPlugin::handles(Object *p_object) const {
+	print_line("117");
 	return Object::cast_to<Theme>(p_object) != nullptr;
 }
 
 void ThemeEditorPlugin::make_visible(bool p_visible) {
+	print_line("118");
 	if (p_visible) {
 		button->show();
 		EditorNode::get_bottom_panel()->make_item_visible(theme_editor);
@@ -3807,6 +3930,7 @@ void ThemeEditorPlugin::make_visible(bool p_visible) {
 }
 
 bool ThemeEditorPlugin::can_auto_hide() const {
+	print_line("119");
 	Ref<Theme> edited_theme = theme_editor->theme;
 	if (edited_theme.is_null()) {
 		return true;
@@ -3875,6 +3999,7 @@ bool ThemeEditorPlugin::can_auto_hide() const {
 }
 
 ThemeEditorPlugin::ThemeEditorPlugin() {
+	print_line("120");
 	theme_editor = memnew(ThemeEditor);
 	theme_editor->plugin = this;
 	theme_editor->set_custom_minimum_size(Size2(0, 200) * EDSCALE);

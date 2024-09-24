@@ -381,6 +381,7 @@ void InspectorDock::_resource_created() {
 }
 
 void InspectorDock::_resource_selected(const Ref<Resource> &p_res, const String &p_property) {
+	print_line("inspector dock:", p_property);
 	if (p_res.is_null()) {
 		return;
 	}

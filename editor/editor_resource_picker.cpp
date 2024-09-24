@@ -123,6 +123,7 @@ void EditorResourcePicker::_update_resource_preview(const String &p_path, const 
 }
 
 void EditorResourcePicker::_resource_selected() {
+	print_line("resource selected");
 	if (edited_resource.is_null()) {
 		edit_button->set_pressed(true);
 		_update_menu();
