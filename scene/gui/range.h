@@ -51,8 +51,6 @@ class Range : public Control {
 		void redraw_owners();
 	};
 
-	Shared *shared = nullptr;
-
 	void _ref_shared(Shared *p_shared);
 	void _unref_shared();
 
@@ -63,6 +61,8 @@ class Range : public Control {
 	void _set_value_no_signal(double p_val);
 
 protected:
+	Shared *shared = nullptr;
+
 	virtual void _value_changed(double p_value);
 	void _notify_shared_value_changed() { shared->emit_value_changed(); };
 

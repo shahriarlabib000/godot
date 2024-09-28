@@ -41,7 +41,13 @@ Size2 SpinBox::get_minimum_size() const {
 }
 
 void SpinBox::_update_text(bool p_keep_line_edit) {
-	String value = String::num(get_value(), Math::range_step_decimals(get_step()));
+	double step = 0.0;
+	if (get_step() != 0.0 && ((get_custom_arrow_step() == 0.0) ^ (get_step() < get_custom_arrow_step()))) {
+		step = get_step();
+	} else {
+		step = get_custom_arrow_step();
+	}
+	String value = String::num(get_value(), Math::range_step_decimals(step));
 	if (is_localizing_numeral_system()) {
 		value = TS->format_number(value);
 	}
@@ -115,8 +121,11 @@ void SpinBox::_range_click_timeout() {
 	if (!drag.enabled && Input::get_singleton()->is_mouse_button_pressed(MouseButton::LEFT)) {
 		bool up = get_local_mouse_position().y < (get_size().height / 2);
 		double step = get_custom_arrow_step() != 0.0 ? get_custom_arrow_step() : get_step();
-		set_value(get_value() + (up ? step : -step));
-
+		if (is_ratio_exp()) {
+			_set_as_ratio_from_arrow(get_as_ratio() + (up ? step : -step) / (1 / step));
+		}else {
+			_set_value_from_arrow(get_value() + (up ? step : -step));
+		}
 		if (range_click_timer->is_one_shot()) {
 			range_click_timer->set_wait_time(0.075);
 			range_click_timer->set_one_shot(false);
@@ -156,8 +165,7 @@ void SpinBox::gui_input(const Ref<InputEvent> &p_event) {
 	Ref<InputEventMouseButton> mb = p_event;
 	Ref<InputEventMouseMotion> mm = p_event;
 
-	double step = get_custom_arrow_step() != 0.0 ? get_custom_arrow_step() : get_step();
-
+	double step = get_step();
 	Vector2 mpos;
 	bool mouse_on_up_button = false;
 	bool mouse_on_down_button = false;
@@ -177,7 +185,12 @@ void SpinBox::gui_input(const Ref<InputEvent> &p_event) {
 				line_edit->grab_focus();
 
 				if (mouse_on_up_button || mouse_on_down_button) {
-					set_value(get_value() + (mouse_on_up_button ? step : -step));
+					double temp_step = get_custom_arrow_step() != 0.0 ? get_custom_arrow_step() : get_step();
+							if (is_ratio_exp()) {
+								_set_value_from_arrow(Math::pow(get_value(), mouse_on_up_button ? temp_step : -temp_step));
+							}else {
+								_set_value_from_arrow(get_value() + (mouse_on_up_button ? temp_step : -temp_step));
+							}
 				}
 				state_cache.up_button_pressed = mouse_on_up_button;
 				state_cache.down_button_pressed = mouse_on_down_button;
@@ -198,13 +211,21 @@ void SpinBox::gui_input(const Ref<InputEvent> &p_event) {
 			} break;
 			case MouseButton::WHEEL_UP: {
 				if (line_edit->is_editing()) {
-					set_value(get_value() + step * mb->get_factor());
+					if(is_ratio_exp()) {
+						set_as_ratio(get_as_ratio() + (step / (1 / step)) * mb->get_factor());
+					} else {
+						set_value(get_value() + step * mb->get_factor());
+					}
 					accept_event();
 				}
 			} break;
 			case MouseButton::WHEEL_DOWN: {
 				if (line_edit->is_editing()) {
-					set_value(get_value() - step * mb->get_factor());
+					if(is_ratio_exp()) {
+						set_as_ratio(get_as_ratio() - (step / (1 / step)) * mb->get_factor());
+					} else {
+						set_value(get_value() - step * mb->get_factor());
+					}
 					accept_event();
 				}
 			} break;
@@ -243,11 +264,20 @@ void SpinBox::gui_input(const Ref<InputEvent> &p_event) {
 		if (drag.enabled) {
 			drag.diff_y += mm->get_relative().y;
 			double diff_y = -0.01 * Math::pow(ABS(drag.diff_y), 1.8) * SIGN(drag.diff_y);
-			set_value(CLAMP(drag.base_val + step * diff_y, get_min(), get_max()));
+			double val = CLAMP(drag.base_val + step * diff_y, get_min(), get_max());
+			if(is_ratio_exp()) {
+				set_as_ratio(val);
+			} else {
+				set_value(val);
+			}
 		} else if (drag.allowed && drag.capture_pos.distance_to(mm->get_position()) > 2) {
 			Input::get_singleton()->set_mouse_mode(Input::MOUSE_MODE_CAPTURED);
 			drag.enabled = true;
-			drag.base_val = get_value();
+			if (is_ratio_exp()) {
+				drag.base_val = get_as_ratio();
+			} else {
+				drag.base_val = get_value();
+			}
 			drag.diff_y = 0;
 		}
 	}
@@ -517,6 +547,46 @@ void SpinBox::_update_buttons_state_for_current_value() {
 		state_cache.down_button_disabled = should_disable_down;
 		queue_redraw();
 	}
+}
+
+void SpinBox::_set_value_from_arrow(double p_val) {
+	double step = get_custom_arrow_step() != 0.0 ? get_custom_arrow_step() : get_step();
+
+	if (!shared->allow_greater && p_val > shared->max - shared->page) {
+		p_val = shared->max - shared->page;
+	}
+
+	if (!shared->allow_lesser && p_val < shared->min) {
+		p_val = shared->min;
+	}
+
+	if (shared->val == p_val) {
+		return;
+	}
+
+	shared->val = Math::snapped(p_val,step);
+	shared->emit_value_changed();
+}
+
+void SpinBox::_set_as_ratio_from_arrow(double p_value) {
+	double step = get_custom_arrow_step() != 0.0 ? get_custom_arrow_step() : get_step();
+	double v;
+
+	if (shared->exp_ratio && get_min() >= 0) {
+		double exp_min = get_min() == 0 ? 0.0 : Math::log(get_min()) / Math::log((double)2);
+		double exp_max = Math::log(get_max()) / Math::log((double)2);
+		v = Math::pow(2, exp_min + (exp_max - exp_min) * p_value);
+	} else {
+		double percent = (get_max() - get_min()) * p_value;
+		if (step > 0) {
+			double steps = round(percent / step);
+			v = steps * step + get_min();
+		} else {
+			v = percent + get_min();
+		}
+	}
+	v = CLAMP(v, get_min(), get_max());
+	_set_value_from_arrow(v);
 }
 
 void SpinBox::_bind_methods() {
