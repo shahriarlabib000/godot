@@ -41,7 +41,13 @@ Size2 SpinBox::get_minimum_size() const {
 }
 
 void SpinBox::_update_text(bool p_keep_line_edit) {
-	String value = String::num(get_value(), Math::range_step_decimals(get_step()));
+	double step = 0.0;
+	if (get_step() != 0.0 && ((get_custom_arrow_step() == 0.0) != (get_step() < get_custom_arrow_step()))) {
+		step = get_step();
+	} else {
+		step = get_custom_arrow_step();
+	}
+	String value = String::num(get_value(), Math::range_step_decimals(step));
 	if (is_localizing_numeral_system()) {
 		value = TS->format_number(value);
 	}
@@ -115,7 +121,7 @@ void SpinBox::_range_click_timeout() {
 	if (!drag.enabled && Input::get_singleton()->is_mouse_button_pressed(MouseButton::LEFT)) {
 		bool up = get_local_mouse_position().y < (get_size().height / 2);
 		double step = get_custom_arrow_step() != 0.0 ? get_custom_arrow_step() : get_step();
-		set_value(get_value() + (up ? step : -step));
+		_set_value_from_arrow(get_value() + (up ? step : -step));
 
 		if (range_click_timer->is_one_shot()) {
 			range_click_timer->set_wait_time(0.075);
@@ -156,8 +162,7 @@ void SpinBox::gui_input(const Ref<InputEvent> &p_event) {
 	Ref<InputEventMouseButton> mb = p_event;
 	Ref<InputEventMouseMotion> mm = p_event;
 
-	double step = get_custom_arrow_step() != 0.0 ? get_custom_arrow_step() : get_step();
-
+	double step = get_step();
 	Vector2 mpos;
 	bool mouse_on_up_button = false;
 	bool mouse_on_down_button = false;
@@ -177,7 +182,8 @@ void SpinBox::gui_input(const Ref<InputEvent> &p_event) {
 				line_edit->grab_focus();
 
 				if (mouse_on_up_button || mouse_on_down_button) {
-					set_value(get_value() + (mouse_on_up_button ? step : -step));
+					double temp_step = get_custom_arrow_step() != 0.0 ? get_custom_arrow_step() : get_step();
+					_set_value_from_arrow(get_value() + (mouse_on_up_button ? temp_step : -temp_step));
 				}
 				state_cache.up_button_pressed = mouse_on_up_button;
 				state_cache.down_button_pressed = mouse_on_down_button;
@@ -517,6 +523,25 @@ void SpinBox::_update_buttons_state_for_current_value() {
 		state_cache.down_button_disabled = should_disable_down;
 		queue_redraw();
 	}
+}
+
+void SpinBox::_set_value_from_arrow(double p_val) {
+	double step= get_custom_arrow_step() != 0.0 ? get_custom_arrow_step() : get_step();
+
+	if (!shared->allow_greater && p_val > shared->max - shared->page) {
+		p_val = shared->max - shared->page;
+	}
+
+	if (!shared->allow_lesser && p_val < shared->min) {
+		p_val = shared->min;
+	}
+
+	if (shared->val == p_val) {
+		return;
+	}
+
+	shared->val = Math::snapped(p_val,step);
+	shared->emit_value_changed();
 }
 
 void SpinBox::_bind_methods() {

@@ -133,6 +133,7 @@ class SpinBox : public Range {
 
 	void _mouse_exited();
 	void _update_buttons_state_for_current_value();
+	void _set_value_from_arrow( double p_val);
 
 protected:
 	virtual void gui_input(const Ref<InputEvent> &p_event) override;
