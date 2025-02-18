@@ -212,6 +212,8 @@ void SceneTreeDock::shortcut_input(const Ref<InputEvent> &p_event) {
 		_tool_selected(TOOL_ERASE, true);
 	} else if (ED_IS_SHORTCUT("scene_tree/copy_node_path", p_event)) {
 		_tool_selected(TOOL_COPY_NODE_PATH);
+	} else if (ED_IS_SHORTCUT("scene_tree/copy_absolute_node_path", p_event)) {
+		_tool_selected(TOOL_COPY_ABSOLUTE_NODE_PATH);
 	} else if (ED_IS_SHORTCUT("scene_tree/show_in_file_system", p_event)) {
 		_tool_selected(TOOL_SHOW_IN_FILE_SYSTEM);
 	} else if (ED_IS_SHORTCUT("scene_tree/toggle_unique_name", p_event)) {
@@ -1198,6 +1200,23 @@ void SceneTreeDock::_tool_selected(int p_tool, bool p_confirm_override) {
 				if (node) {
 					Node *root = EditorNode::get_singleton()->get_edited_scene();
 					NodePath path = root->get_path().rel_path_to(node->get_path());
+					DisplayServer::get_singleton()->clipboard_set(path);
+				}
+			}
+		} break;
+		case TOOL_COPY_ABSOLUTE_NODE_PATH: {
+			List<Node *> selection = editor_selection->get_selected_node_list();
+			List<Node *>::Element *e = selection.front();
+			if (e) {
+				Node *node = e->get();
+				if (node) {
+					Node *root = EditorNode::get_singleton()->get_edited_scene();
+					String path;
+					if (root == node) {
+						path = "/root/" + root->get_name();
+					} else {
+						path = "/root/" + root->get_name() + "/" + root->get_path_to(node);
+					}
 					DisplayServer::get_singleton()->clipboard_set(path);
 				}
 			}
@@ -3861,6 +3880,7 @@ void SceneTreeDock::_tree_rmb(const Vector2 &p_menu_pos) {
 		if (full_selection.size() == 1) {
 			menu->add_separator();
 			menu->add_icon_shortcut(get_editor_theme_icon(SNAME("CopyNodePath")), ED_GET_SHORTCUT("scene_tree/copy_node_path"), TOOL_COPY_NODE_PATH);
+			menu->add_shortcut(ED_GET_SHORTCUT("scene_tree/copy_absolute_node_path"), TOOL_COPY_ABSOLUTE_NODE_PATH);
 		}
 	}
 
@@ -4647,6 +4667,7 @@ SceneTreeDock::SceneTreeDock(Node *p_scene_root, EditorSelection *p_editor_selec
 	ED_SHORTCUT("scene_tree/make_root", TTRC("Make Scene Root"));
 	ED_SHORTCUT("scene_tree/save_branch_as_scene", TTRC("Save Branch as Scene..."));
 	ED_SHORTCUT("scene_tree/copy_node_path", TTRC("Copy Node Path"), KeyModifierMask::CMD_OR_CTRL | KeyModifierMask::SHIFT | Key::C);
+	ED_SHORTCUT("scene_tree/copy_absolute_node_path", TTRC("Copy Absolute Node Path"), KeyModifierMask::CMD_OR_CTRL | KeyModifierMask::ALT | Key::C);
 	ED_SHORTCUT("scene_tree/show_in_file_system", TTRC("Show in FileSystem"));
 	ED_SHORTCUT("scene_tree/toggle_unique_name", TTRC("Toggle Access as Unique Name"));
 	ED_SHORTCUT("scene_tree/toggle_editable_children", TTRC("Toggle Editable Children"));
