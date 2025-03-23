@@ -99,5 +99,12 @@
 				Set the UV2 attribute that will be pushed with the next vertex.
 			</description>
 		</method>
+		<method name="surface_set_vertices">
+			<return type="void" />
+			<param index="0" name="vertices" type="PackedVector3Array" />
+			<description>
+				Set all the vertices at once.
+			</description>
+		</method>
 	</methods>
 </class>

@@ -145,6 +145,28 @@ void ImmediateMesh::surface_add_vertex_2d(const Vector2 &p_vertex) {
 	active_surface_data.vertex_2d = true;
 }
 
+void ImmediateMesh::surface_set_vertices(const Vector<Vector3> &p_vertices) {
+	ERR_FAIL_COND_MSG(!surface_active, "Not creating any surface. Use surface_begin() to do it.");
+	ERR_FAIL_COND_MSG(vertices.size() && active_surface_data.vertex_2d, "Can't mix 2D and 3D vertices in a surface.");
+
+	if (uses_colors) {
+		colors.push_back(current_color);
+	}
+	if (uses_normals) {
+		normals.push_back(current_normal);
+	}
+	if (uses_tangents) {
+		tangents.push_back(current_tangent);
+	}
+	if (uses_uvs) {
+		uvs.push_back(current_uv);
+	}
+	if (uses_uv2s) {
+		uv2s.push_back(current_uv2);
+	}
+	vertices = p_vertices;
+}
+
 void ImmediateMesh::surface_end() {
 	ERR_FAIL_COND_MSG(!surface_active, "Not creating any surface. Use surface_begin() to do it.");
 	ERR_FAIL_COND_MSG(vertices.is_empty(), "No vertices were added, surface can't be created.");
@@ -406,6 +428,7 @@ void ImmediateMesh::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("surface_set_uv2", "uv2"), &ImmediateMesh::surface_set_uv2);
 	ClassDB::bind_method(D_METHOD("surface_add_vertex", "vertex"), &ImmediateMesh::surface_add_vertex);
 	ClassDB::bind_method(D_METHOD("surface_add_vertex_2d", "vertex"), &ImmediateMesh::surface_add_vertex_2d);
+	ClassDB::bind_method(D_METHOD("surface_set_vertices", "vertices"), &ImmediateMesh::surface_set_vertices);
 	ClassDB::bind_method(D_METHOD("surface_end"), &ImmediateMesh::surface_end);
 
 	ClassDB::bind_method(D_METHOD("clear_surfaces"), &ImmediateMesh::clear_surfaces);

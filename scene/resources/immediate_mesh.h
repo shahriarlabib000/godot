@@ -87,6 +87,7 @@ public:
 	void surface_set_uv(const Vector2 &p_uv);
 	void surface_set_uv2(const Vector2 &p_uv2);
 	void surface_add_vertex(const Vector3 &p_vertex);
+	void surface_set_vertices(const Vector<Vector3> &p_vertices);
 	void surface_add_vertex_2d(const Vector2 &p_vertex);
 	void surface_end();
 
