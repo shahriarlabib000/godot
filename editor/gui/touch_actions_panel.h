@@ -61,6 +61,7 @@ private:
 	void _on_drag_handle_gui_input(const Ref<InputEvent> &p_event);
 	void _switch_layout();
 	void _lock_panel_toggled(bool p_pressed);
+	void _update_undo_redo_allowed();
 	Button *_add_new_action_button(const String &p_shortcut, Key p_keycode = Key::NONE);
 
 public:

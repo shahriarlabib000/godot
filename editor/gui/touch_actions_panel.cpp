@@ -33,6 +33,7 @@
 #include "core/input/input.h"
 #include "editor/editor_settings.h"
 #include "editor/editor_string_names.h"
+#include "editor/editor_undo_redo_manager.h"
 #include "scene/gui/box_container.h"
 #include "scene/gui/button.h"
 #include "scene/gui/color_rect.h"
@@ -122,6 +123,12 @@ void TouchActionsPanel::_lock_panel_toggled(bool p_pressed) {
 	layout_toggle_button->set_disabled(p_pressed);
 }
 
+void TouchActionsPanel::_update_undo_redo_allowed() {
+	EditorUndoRedoManager *undo_redo = EditorUndoRedoManager::get_singleton();
+	undo_button->set_disabled(!undo_redo->has_undo());
+	redo_button->set_disabled(!undo_redo->has_redo());
+}
+
 TouchActionsPanel::TouchActionsPanel() {
 	Ref<StyleBoxFlat> panel_style;
 	panel_style.instantiate();
@@ -170,4 +177,7 @@ TouchActionsPanel::TouchActionsPanel() {
 	delete_button = _add_new_action_button("", Key::KEY_DELETE);
 	undo_button = _add_new_action_button("ui_undo");
 	redo_button = _add_new_action_button("ui_redo");
+
+	EditorUndoRedoManager::get_singleton()->connect("version_changed", callable_mp(this, &TouchActionsPanel::_update_undo_redo_allowed));
+	EditorUndoRedoManager::get_singleton()->connect("history_changed", callable_mp(this, &TouchActionsPanel::_update_undo_redo_allowed));
 }
