@@ -61,6 +61,7 @@ void BackgroundProgress::_add_task(const String &p_task, const String &p_label, 
 	add_child(t.hb);
 
 	tasks[p_task] = t;
+	print_line("bgp _add_task(%s,%s,%d)", p_task, p_label, p_steps);
 }
 
 void BackgroundProgress::_update() {
@@ -73,6 +74,7 @@ void BackgroundProgress::_update() {
 	}
 
 	updates.clear();
+	print_line("bgp _update()");
 }
 
 void BackgroundProgress::_task_step(const String &p_task, int p_step) {
@@ -86,6 +88,7 @@ void BackgroundProgress::_task_step(const String &p_task, int p_step) {
 	} else {
 		t.progress->set_value(p_step);
 	}
+	print_line("bgp _task_step(%s ,%d)", p_task, p_step);
 }
 
 void BackgroundProgress::_end_task(const String &p_task) {
@@ -96,10 +99,12 @@ void BackgroundProgress::_end_task(const String &p_task) {
 
 	memdelete(t.hb);
 	tasks.erase(p_task);
+	print_line("bgp _end_task()");
 }
 
 void BackgroundProgress::add_task(const String &p_task, const String &p_label, int p_steps) {
 	callable_mp(this, &BackgroundProgress::_add_task).call_deferred(p_task, p_label, p_steps);
+	print_line("bgp add_task(%s,%s,%d)", p_task, p_label, p_steps);
 }
 
 void BackgroundProgress::task_step(const String &p_task, int p_step) {
@@ -118,10 +123,12 @@ void BackgroundProgress::task_step(const String &p_task, int p_step) {
 		_THREAD_SAFE_METHOD_
 		updates[p_task] = p_step;
 	}
+	print_line("bgp task_step(%s,%d)", p_task, p_step);
 }
 
 void BackgroundProgress::end_task(const String &p_task) {
 	callable_mp(this, &BackgroundProgress::_end_task).call_deferred(p_task);
+	print_line("bgp end_task(%s)", p_task);
 }
 
 ////////////////////////////////////////////////
@@ -146,9 +153,11 @@ void ProgressDialog::_notification(int p_what) {
 void ProgressDialog::_update_ui() {
 	// Run main loop for two frames.
 	if (is_inside_tree()) {
+		print_line("inside tree bro!!");
 		DisplayServer::get_singleton()->process_events();
 		Main::iteration();
 	}
+	print_line("pd _update_ui()");
 }
 
 void ProgressDialog::_popup() {
@@ -176,6 +185,7 @@ void ProgressDialog::_popup() {
 	current_window->set_disable_input(window_is_input_disabled);
 
 	show();
+	print_line("pd _popup()");
 }
 
 void ProgressDialog::add_task(const String &p_task, const String &p_label, int p_steps, bool p_can_cancel) {
@@ -211,6 +221,7 @@ void ProgressDialog::add_task(const String &p_task, const String &p_label, int p
 		cancel->grab_focus();
 	}
 	_update_ui();
+	print_line("pd add_task(%s)", p_task);
 }
 
 bool ProgressDialog::task_step(const String &p_task, const String &p_state, int p_step, bool p_force_redraw) {
@@ -232,6 +243,7 @@ bool ProgressDialog::task_step(const String &p_task, const String &p_state, int 
 	t.state->set_text(p_state);
 	t.last_progress_tick = OS::get_singleton()->get_ticks_usec();
 	_update_ui();
+	print_line("pd task_step(%s, %s, %d)", p_task, p_state, p_step);
 
 	return canceled;
 }
@@ -252,20 +264,24 @@ void ProgressDialog::end_task(const String &p_task) {
 	} else {
 		_popup();
 	}
+	print_line("pd end_task(%s)", p_task);
 }
 
 void ProgressDialog::add_host_window(Window *p_window) {
 	ERR_FAIL_NULL(p_window);
 	host_windows.push_back(p_window);
+	print_line("pd add_host_window()");
 }
 
 void ProgressDialog::remove_host_window(Window *p_window) {
 	ERR_FAIL_NULL(p_window);
 	host_windows.erase(p_window);
+	print_line("pd remove_host_window");
 }
 
 void ProgressDialog::_cancel_pressed() {
 	canceled = true;
+	print_line("pd _cancel_pressed()");
 }
 
 ProgressDialog::ProgressDialog() {
@@ -293,4 +309,5 @@ ProgressDialog::ProgressDialog() {
 	cancel->set_text(TTR("Cancel"));
 	cancel_hb->add_spacer();
 	cancel->connect(SceneStringName(pressed), callable_mp(this, &ProgressDialog::_cancel_pressed));
+	print_line("pd progressDialog(). #the constructor");
 }
