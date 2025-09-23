@@ -383,6 +383,7 @@ WindowWrapper::WindowWrapper() {
 
 WindowWrapper::~WindowWrapper() {
 	if (ObjectDB::get_instance(window_id)) {
+		print_line("removed window: ", window_id);
 		ProgressDialog::get_singleton()->remove_host_window(window);
 	}
 }

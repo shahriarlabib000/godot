@@ -38,6 +38,8 @@
 #include "scene/gui/panel_container.h"
 #include "scene/main/window.h"
 #include "servers/display_server.h"
+#include "servers/rendering_server.h"
+
 
 void BackgroundProgress::_add_task(const String &p_task, const String &p_label, int p_steps) {
 	_THREAD_SAFE_METHOD_
@@ -131,6 +133,7 @@ ProgressDialog *ProgressDialog::singleton = nullptr;
 void ProgressDialog::_notification(int p_what) {
 	switch (p_what) {
 		case NOTIFICATION_THEME_CHANGED: {
+			print_line("theme changed  again progressDialog okay?");
 			Ref<StyleBox> style = main->get_theme_stylebox(SceneStringName(panel), SNAME("PopupMenu"));
 			main_border_size = style->get_minimum_size();
 			main->set_offset(SIDE_LEFT, style->get_margin(SIDE_LEFT));
@@ -139,6 +142,13 @@ void ProgressDialog::_notification(int p_what) {
 			main->set_offset(SIDE_BOTTOM, -style->get_margin(SIDE_BOTTOM));
 
 			center_panel->add_theme_style_override(SceneStringName(panel), get_theme_stylebox(SceneStringName(panel), "PopupPanel"));
+		} break;
+		case NOTIFICATION_DRAW: {
+			print_line("is_visible: ", is_visible());
+			print_line("ProgressDialog size: ", get_size(), ", position: ", get_position());
+			print_line("progressDialog draw notification");
+			// Draw a semi-transparent red rectangle covering the dialog area
+			draw_rect(Rect2(Vector2(0, 0), get_size()), Color(1, 0, 0, 0.5));
 		} break;
 	}
 }
@@ -184,6 +194,7 @@ void ProgressDialog::_reparent_and_show() {
 	current_window->set_disable_input(window_is_input_disabled);
 
 	show();
+	RenderingServer::get_singleton()->sync();
 }
 
 void ProgressDialog::add_task(const String &p_task, const String &p_label, int p_steps, bool p_can_cancel) {
@@ -225,8 +236,10 @@ bool ProgressDialog::task_step(const String &p_task, const String &p_state, int 
 	ERR_FAIL_COND_V(!tasks.has(p_task), canceled);
 
 	Task &t = tasks[p_task];
+	print_line("task step force redraw", p_force_redraw);
 	if (!p_force_redraw) {
 		uint64_t tus = OS::get_singleton()->get_ticks_usec();
+		print_line("task add time taken", tus - t.last_progress_tick);
 		if (tus - t.last_progress_tick < 200000) { //200ms
 			return canceled;
 		}
