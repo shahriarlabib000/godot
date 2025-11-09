@@ -304,7 +304,7 @@ void RendererCanvasCull::_cull_canvas_item(Item *p_canvas_item, const Transform2
 	Item *ci = p_canvas_item;
 	
 	if (ci->owner && String(ci->owner->get_name()).find("ProgressDialog") != -1) {
-    	print_line(vformat("ProgressDialog cull: rect=%s clip_rect=%s", ci->rect, p_clip_rect));
+  		print_line(vformat("ProgressDialog cull: rect=%s clip_rect=%s", ci->rect, p_clip_rect));
 	}
 
 	if (!ci->visible) {
