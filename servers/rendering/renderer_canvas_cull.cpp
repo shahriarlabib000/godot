@@ -303,6 +303,10 @@ void RendererCanvasCull::_attach_canvas_item_for_draw(RendererCanvasCull::Item *
 void RendererCanvasCull::_cull_canvas_item(Item *p_canvas_item, const Transform2D &p_parent_xform, const Rect2 &p_clip_rect, const Color &p_modulate, int p_z, RendererCanvasRender::Item **r_z_list, RendererCanvasRender::Item **r_z_last_list, Item *p_canvas_clip, Item *p_material_owner, bool p_is_already_y_sorted, uint32_t p_canvas_cull_mask, const Point2 &p_repeat_size, int p_repeat_times, RendererCanvasRender::Item *p_repeat_source_item) {
 	Item *ci = p_canvas_item;
 
+	if (ci->get_class() == "ProgressDialog" || String(ci->get_class()).find("ProgressDialog") != -1) {
+		  print_line(vformat("ProgressDialog‑cull: rect=%s clip_rect=%s", ci->rect, p_clip_rect));
+		  }
+
 	if (!ci->visible) {
 		return;
 	}
