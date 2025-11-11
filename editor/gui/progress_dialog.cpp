@@ -154,7 +154,7 @@ void ProgressDialog::_update_ui() {
 void ProgressDialog::_popup() {
 	// Activate processing of all inputs in EditorNode, and the EditorNode::input method
 	// will discard every key input.
-	EditorNode::get_singleton()->set_process_input(true);
+	//EditorNode::get_singleton()->set_process_input(true);
 	// Disable all other windows to prevent interaction with them.
 	//for (Window *w : host_windows) {
 	//w->set_process_mode(PROCESS_MODE_DISABLED);
@@ -253,10 +253,10 @@ void ProgressDialog::end_task(const String &p_task) {
 
 	if (tasks.is_empty()) {
 		hide();
-		EditorNode::get_singleton()->set_process_input(false);
-		for (Window *w : host_windows) {
-			w->set_process_mode(PROCESS_MODE_INHERIT);
-		}
+		//EditorNode::get_singleton()->set_process_input(false);
+		//for (Window *w : host_windows) {
+			//w->set_process_mode(PROCESS_MODE_INHERIT);
+		//}
 	} else {
 		_popup();
 	}
