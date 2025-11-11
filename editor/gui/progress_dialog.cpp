@@ -179,9 +179,9 @@ void ProgressDialog::_reparent_and_show() {
 	reparent(current_window);
 
 	// Ensures that events are properly released before the dialog blocks input.
-	bool window_is_input_disabled = current_window->is_input_disabled();
-	current_window->set_disable_input(!window_is_input_disabled);
-	current_window->set_disable_input(window_is_input_disabled);
+	//bool window_is_input_disabled = current_window->is_input_disabled();
+	//current_window->set_disable_input(!window_is_input_disabled);
+	//current_window->set_disable_input(window_is_input_disabled);
 
 	show();
 }
