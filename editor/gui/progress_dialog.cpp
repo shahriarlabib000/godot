@@ -156,9 +156,9 @@ void ProgressDialog::_popup() {
 	// will discard every key input.
 	EditorNode::get_singleton()->set_process_input(true);
 	// Disable all other windows to prevent interaction with them.
-	for (Window *w : host_windows) {
-		//w->set_process_mode(PROCESS_MODE_DISABLED);
-	}
+	//for (Window *w : host_windows) {
+	//w->set_process_mode(PROCESS_MODE_DISABLED);
+	//}
 
 	Size2 ms = main->get_combined_minimum_size();
 	ms.width = MAX(500 * EDSCALE, ms.width);
