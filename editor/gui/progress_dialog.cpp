@@ -146,7 +146,7 @@ void ProgressDialog::_notification(int p_what) {
 void ProgressDialog::_update_ui() {
 	// Run main loop for two frames.
 	if (is_inside_tree()) {
-	//	DisplayServer::get_singleton()->process_events();
+		//	DisplayServer::get_singleton()->process_events();
 		Main::iteration();
 	}
 }
