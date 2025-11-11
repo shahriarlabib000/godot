@@ -255,7 +255,7 @@ void ProgressDialog::end_task(const String &p_task) {
 		hide();
 		//EditorNode::get_singleton()->set_process_input(false);
 		//for (Window *w : host_windows) {
-			//w->set_process_mode(PROCESS_MODE_INHERIT);
+		//w->set_process_mode(PROCESS_MODE_INHERIT);
 		//}
 	} else {
 		_popup();
