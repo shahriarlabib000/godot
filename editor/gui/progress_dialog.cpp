@@ -174,9 +174,9 @@ void ProgressDialog::_popup() {
 }
 
 void ProgressDialog::_reparent_and_show() {
-	Window *current_window = SceneTree::get_singleton()->get_root()->get_last_exclusive_window();
-	ERR_FAIL_NULL(current_window);
-	reparent(current_window);
+	//Window *current_window = SceneTree::get_singleton()->get_root()->get_last_exclusive_window();
+	//ERR_FAIL_NULL(current_window);
+	//reparent(current_window);
 
 	// Ensures that events are properly released before the dialog blocks input.
 	//bool window_is_input_disabled = current_window->is_input_disabled();
