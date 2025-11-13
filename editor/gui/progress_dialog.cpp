@@ -148,6 +148,7 @@ void ProgressDialog::_update_ui() {
 	if (is_inside_tree()) {
 		DisplayServer::get_singleton()->process_events();
 		Main::iteration();
+		DisplayServer::get_singleton()->process_events();
 	}
 }
 
