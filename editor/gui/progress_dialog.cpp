@@ -188,8 +188,6 @@ void ProgressDialog::_reparent_and_show() {
 }
 
 void ProgressDialog::add_task(const String &p_task, const String &p_label, int p_steps, bool p_can_cancel) {
-	_THREAD_SAFE_METHOD_
-
 	if (MessageQueue::get_singleton()->is_flushing()) {
 		ERR_PRINT("Do not use progress dialog (task) while flushing the message queue or using call_deferred()!");
 		return;
@@ -225,8 +223,6 @@ void ProgressDialog::add_task(const String &p_task, const String &p_label, int p
 }
 
 bool ProgressDialog::task_step(const String &p_task, const String &p_state, int p_step, bool p_force_redraw) {
-	_THREAD_SAFE_METHOD_
-
 	ERR_FAIL_COND_V(!tasks.has(p_task), canceled);
 
 	Task &t = tasks[p_task];
@@ -250,8 +246,6 @@ bool ProgressDialog::task_step(const String &p_task, const String &p_state, int 
 }
 
 void ProgressDialog::end_task(const String &p_task) {
-	_THREAD_SAFE_METHOD_
-
 	ERR_FAIL_COND(!tasks.has(p_task));
 	Task &t = tasks[p_task];
 
