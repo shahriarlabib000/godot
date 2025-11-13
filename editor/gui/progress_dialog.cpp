@@ -146,7 +146,7 @@ void ProgressDialog::_notification(int p_what) {
 void ProgressDialog::_update_ui() {
 	// Run main loop for two frames.
 	if (is_inside_tree()) {
-		//	DisplayServer::get_singleton()->process_events();
+		DisplayServer::get_singleton()->process_events();
 		Main::iteration();
 	}
 }
@@ -154,11 +154,11 @@ void ProgressDialog::_update_ui() {
 void ProgressDialog::_popup() {
 	// Activate processing of all inputs in EditorNode, and the EditorNode::input method
 	// will discard every key input.
-	//EditorNode::get_singleton()->set_process_input(true);
+	EditorNode::get_singleton()->set_process_input(true);
 	// Disable all other windows to prevent interaction with them.
-	//for (Window *w : host_windows) {
-	//w->set_process_mode(PROCESS_MODE_DISABLED);
-	//}
+	for (Window *w : host_windows) {
+		w->set_process_mode(PROCESS_MODE_DISABLED);
+	}
 
 	Size2 ms = main->get_combined_minimum_size();
 	ms.width = MAX(500 * EDSCALE, ms.width);
@@ -175,14 +175,14 @@ void ProgressDialog::_popup() {
 }
 
 void ProgressDialog::_reparent_and_show() {
-	//Window *current_window = SceneTree::get_singleton()->get_root()->get_last_exclusive_window();
-	//ERR_FAIL_NULL(current_window);
-	//reparent(current_window);
+	Window *current_window = SceneTree::get_singleton()->get_root()->get_last_exclusive_window();
+	ERR_FAIL_NULL(current_window);
+	reparent(current_window);
 
 	// Ensures that events are properly released before the dialog blocks input.
-	//bool window_is_input_disabled = current_window->is_input_disabled();
-	//current_window->set_disable_input(!window_is_input_disabled);
-	//current_window->set_disable_input(window_is_input_disabled);
+	bool window_is_input_disabled = current_window->is_input_disabled();
+	current_window->set_disable_input(!window_is_input_disabled);
+	current_window->set_disable_input(window_is_input_disabled);
 
 	show();
 }
@@ -254,10 +254,10 @@ void ProgressDialog::end_task(const String &p_task) {
 
 	if (tasks.is_empty()) {
 		hide();
-		//EditorNode::get_singleton()->set_process_input(false);
-		//for (Window *w : host_windows) {
-		//w->set_process_mode(PROCESS_MODE_INHERIT);
-		//}
+		EditorNode::get_singleton()->set_process_input(false);
+		for (Window *w : host_windows) {
+			w->set_process_mode(PROCESS_MODE_INHERIT);
+		}
 	} else {
 		_popup();
 	}
