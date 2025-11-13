@@ -167,6 +167,7 @@ void ProgressDialog::_popup() {
 	center_panel->set_custom_minimum_size(ms);
 
 	if (is_ready()) {
+		print_line("progressDialog is ready lil bro");
 		_reparent_and_show();
 	} else {
 		callable_mp(this, &ProgressDialog::_reparent_and_show).call_deferred();
