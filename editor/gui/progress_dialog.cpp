@@ -230,7 +230,6 @@ bool ProgressDialog::task_step(const String &p_task, const String &p_state, int 
 
 	print_line("task step thread id: ", ::Thread::get_thread_caller_id());
 	
-
 	Task &t = tasks[p_task];
 	if (!p_force_redraw) {
 		uint64_t tus = OS::get_singleton()->get_ticks_usec();
