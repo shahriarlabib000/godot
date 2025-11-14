@@ -193,6 +193,7 @@ void ProgressDialog::add_task(const String &p_task, const String &p_label, int p
 		ERR_PRINT("Do not use progress dialog (task) while flushing the message queue or using call_deferred()!");
 		return;
 	}
+	print_line("add task thread id: ",OS::get_singleton()->get_thread_caller_id());
 
 	ERR_FAIL_COND_MSG(tasks.has(p_task), "Task '" + p_task + "' already exists.");
 	ProgressDialog::Task t;
