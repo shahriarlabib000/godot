@@ -65,6 +65,9 @@ class PanelContainer;
 
 class ProgressDialog : public CenterContainer {
 	GDCLASS(ProgressDialog, CenterContainer);
+
+	_THREAD_SAFE_CLASS_
+
 	struct Task {
 		String task;
 		VBoxContainer *vb = nullptr;
