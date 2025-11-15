@@ -194,7 +194,7 @@ void ProgressDialog::add_task(const String &p_task, const String &p_label, int p
 		return;
 	}
 
-	print_line("add task thread id: ", ::Thread::get_thread_caller_id());
+	print_line("add task thread id: ", ::Thread::get_caller_id());
 
 	ERR_FAIL_COND_MSG(tasks.has(p_task), "Task '" + p_task + "' already exists.");
 	ProgressDialog::Task t;
@@ -228,7 +228,7 @@ void ProgressDialog::add_task(const String &p_task, const String &p_label, int p
 bool ProgressDialog::task_step(const String &p_task, const String &p_state, int p_step, bool p_force_redraw) {
 	ERR_FAIL_COND_V(!tasks.has(p_task), canceled);
 
-	print_line("task step thread id: ", ::Thread::get_thread_caller_id());
+	print_line("task step thread id: ", ::Thread::get_caller_id());
 	
 	Task &t = tasks[p_task];
 	if (!p_force_redraw) {
@@ -254,7 +254,7 @@ void ProgressDialog::end_task(const String &p_task) {
 	ERR_FAIL_COND(!tasks.has(p_task));
 	Task &t = tasks[p_task];
 
-	print_line("task end thread id: ", ::Thread::get_thread_caller_id());
+	print_line("task end thread id: ", ::Thread::get_caller_id());
 
 	memdelete(t.vb);
 	tasks.erase(p_task);
